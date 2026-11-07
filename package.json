@@ -1,0 +1,14 @@
+{
+  "devDependencies": {
+    "concurrently": "^9.0.0"
+  },
+  "name": "video-downloader",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently -n server,client -c blue,green \"npm --prefix server run dev\" \"npm --prefix client run dev\"",
+    "install:all": "npm install && npm --prefix server install && npm --prefix client install",
+    "build": "npm --prefix client run build",
+    "start": "npm run build && npm --prefix server start"
+  },
+  "version": "1.0.0"
+}

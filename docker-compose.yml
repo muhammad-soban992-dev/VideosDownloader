@@ -1,0 +1,8 @@
+# Local Docker run:  docker compose up --build   ->  http://localhost:5000
+# For a public server (HTTPS) use docker-compose.prod.yml — see DEPLOY_AWS.md.
+services:
+  videograb:
+    build: .
+    ports:
+      - "5000:5000"
+    restart: unless-stopped

@@ -1,0 +1,16 @@
+# {$DOMAIN} is your domain, or <elastic-ip>.sslip.io if you have no domain.
+# Caddy gets and renews the HTTPS certificate automatically.
+{$DOMAIN} {
+	# Optional but STRONGLY recommended for a public server: password-protect
+	# it so strangers can't use your bandwidth. Generate the hash with:
+	#   docker run --rm caddy:2 caddy hash-password --plaintext 'your-password'
+	# then uncomment and paste it:
+	#
+	# basic_auth {
+	# 	me <paste-hash-here>
+	# }
+
+	reverse_proxy app:5000 {
+		flush_interval -1
+	}
+}

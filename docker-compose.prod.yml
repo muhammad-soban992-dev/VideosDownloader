@@ -1,0 +1,36 @@
+# Production: app + Caddy (automatic HTTPS). See DEPLOY_AWS.md.
+#   cp .env.example .env   (edit it)
+#   docker compose -f docker-compose.prod.yml up -d --build
+services:
+  app:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      TRUST_PROXY: "1" # Caddy is the one proxy in front of us
+    expose:
+      - "5000"
+    # Only if YouTube shows "confirm you're not a bot" (see DEPLOY_AWS.md):
+    #   1. create ./cookies.txt on the server FIRST (a missing file becomes a folder)
+    #   2. uncomment these two lines and set COOKIES_FILE=/run/cookies.txt in .env
+    # volumes:
+    #   - ./cookies.txt:/run/cookies.txt:ro
+
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    depends_on:
+      - app
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      DOMAIN: ${DOMAIN:?Set DOMAIN in .env}
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+
+volumes:
+  caddy_data:
+  caddy_config:
